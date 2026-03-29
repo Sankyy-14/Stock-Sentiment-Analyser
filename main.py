@@ -21,9 +21,9 @@ headlines = [
     "Reliance Jio adds 10 million new subscribers this month",
     "Reliance stock falls amid global market selloff",
     "Reliance expands green energy investment to 10 billion dollars",
-    "Reliance faces regulatory scrutiny over retail expansion",
+    "Reliance faces regulatory scrutiny over retail expansions",
     "Mukesh Ambani announces major partnership with global tech firm",
-    "Reliance Industries beats analyst expectations for third quarter",
+    "Reliance Industries beats analyst expectations for third quarters",
     "Oil prices drop impacting Reliance refinery margins",
 ]
 
