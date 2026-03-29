@@ -44,19 +44,6 @@ Chart saved as reliance_prediction.png
 
 ---
 
-## Project Structure
-
-```
-stock-sentiment-analyser/
-├── venv/                   # Virtual environment (not committed to GitHub)
-├── main.py                 # Main project code
-├── reliance_prediction.png # Generated chart output
-├── .gitignore
-└── README.md
-```
-
----
-
 ## How to Set Up and Run
 
 ### Prerequisites
@@ -148,12 +135,12 @@ The model predicts UP or DOWN for the next trading day using the most recent dat
 
 ## Future Improvements
 
-- [ ] Live news scraping from Yahoo Finance RSS or NewsAPI
-- [ ] FinBERT (financial NLP transformer) instead of VADER
-- [ ] Additional features: RSI, MACD, trading volume
-- [ ] Streamlit web dashboard for interactive use
-- [ ] Backtesting module to simulate trading performance
-- [ ] Support for multiple stock tickers
+- Live news scraping from Yahoo Finance RSS or NewsAPI
+- FinBERT (financial NLP transformer) instead of VADER
+- Additional features: RSI, MACD, trading volume
+- Streamlit web dashboard for interactive use
+- Backtesting module to simulate trading performance
+- Support for multiple stock tickers
 
 ---
 
