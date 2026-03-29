@@ -152,4 +152,4 @@ This project was built as a **Bring Your Own Project (BYOP)** capstone for the A
 
 ## License
 
-MIT License — free to use, modify, and distribute.
+MIT License: free to use, modify, and distribute.
