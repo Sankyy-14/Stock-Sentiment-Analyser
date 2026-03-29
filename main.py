@@ -30,7 +30,7 @@ headlines = [
 scores = [analyzer.polarity_scores(h)["compound"] for h in headlines]
 avg_sentiment = sum(scores) / len(scores)
 
-# Part 3: Train model 
+# Part 3: Training model 
 stock["Price_Change"] = stock["Close"].pct_change()
 stock["MA_5"] = stock["Close"].rolling(window=5).mean()
 stock["MA_20"] = stock["Close"].rolling(window=20).mean()
@@ -53,7 +53,7 @@ predictions = model.predict(X_test)
 accuracy = accuracy_score(y_test, predictions)
 print(f"Model Accuracy: {accuracy * 100:.2f}%")
 
-# Part 4: Live prediction + chart 
+# Part 4: Live prediction and chart 
 # Predict tomorrow using the most recent data point
 latest = stock[features].iloc[-1].values.reshape(1, -1)
 prediction = model.predict(latest)[0]
