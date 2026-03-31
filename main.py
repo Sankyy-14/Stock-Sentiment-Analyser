@@ -10,13 +10,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 import matplotlib.pyplot as plt
 
-# ── Ticker input ──────────────────────────────────────────
+# Ticker input 
 ticker = input("Enter stock ticker (e.g. RELIANCE.NS, TCS.NS, HDFCBANK.NS): ").strip().upper()
 if not ticker:
     ticker = "RELIANCE.NS"
     print("No ticker entered, defaulting to RELIANCE.NS")
 
-# ── Part 1: Fetch stock data ──────────────────────────────
+# Part 1: Fetch stock data 
 stock = yf.download(ticker, period="1y", interval="1d", progress=False)
 stock.columns = stock.columns.get_level_values(0)
 stock = stock[["Close"]].copy()
@@ -24,7 +24,7 @@ stock["Target"] = (stock["Close"].shift(-1) > stock["Close"]).astype(int)
 
 print(f"\nStock data ready for {ticker}!")
 
-# ── Part 2: Live news sentiment ───────────────────────────
+# Part 2: Live news sentiment 
 analyzer = SentimentIntensityAnalyzer()
 
 query = ticker.replace(".NS", "").replace(".BO", "")
@@ -46,7 +46,7 @@ scores = [analyzer.polarity_scores(h)["compound"] for h in headlines]
 avg_sentiment = sum(scores) / len(scores)
 print(f"\nAverage sentiment score: {avg_sentiment:.3f}")
 
-# ── Part 3: Feature engineering + train model ─────────────
+# Part 3: Feature engineering + train model 
 stock["Price_Change"] = stock["Close"].pct_change()
 stock["MA_5"] = stock["Close"].rolling(window=5).mean()
 stock["MA_20"] = stock["Close"].rolling(window=20).mean()
@@ -73,7 +73,7 @@ print(f"\nModel Accuracy: {accuracy * 100:.2f}%")
 print("\nDetailed Report:")
 print(classification_report(y_test, predictions, target_names=["DOWN", "UP"]))
 
-# ── Part 4: Prediction + chart ────────────────────────────
+# Part 4: Prediction + chart 
 latest = stock[features].iloc[-1].values.reshape(1, -1)
 prediction = model.predict(latest)[0]
 confidence = model.predict_proba(latest)[0][prediction] * 100
