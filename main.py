@@ -5,7 +5,7 @@ import yfinance as yf
 import pandas as pd
 import feedparser
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 import matplotlib.pyplot as plt
@@ -64,7 +64,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+model = XGBClassifier(n_estimators=100, random_state=42, eval_metric="logloss")
 model.fit(X_train, y_train)
 
 predictions = model.predict(X_test)
@@ -96,3 +96,56 @@ plt.tight_layout()
 plt.savefig(chart_filename, dpi=150)
 plt.show()
 print(f"\nChart saved as {chart_filename}")
+
+# Part 5: Backtesting simulator 
+print("\nRunning backtest...")
+
+# Get test set dates and actual closing prices
+test_dates = stock.iloc[len(stock) - len(y_test):].index
+test_prices = stock.loc[test_dates, "Close"].values
+
+# Simulate trading
+capital = 100000  # Start with Rs 1,00,000
+holding = False
+buy_price = 0
+portfolio = []
+
+for i in range(len(predictions)):
+    if predictions[i] == 1 and not holding:
+        buy_price = test_prices[i]
+        holding = True
+    elif predictions[i] == 0 and holding:
+        profit = test_prices[i] - buy_price
+        capital += profit
+        holding = False
+    portfolio.append(capital)
+
+# If still holding at end, sell at last price
+if holding:
+    capital += test_prices[-1] - buy_price
+    portfolio[-1] = capital
+
+total_return = ((capital - 100000) / 100000) * 100
+print(f"Starting capital: Rs 1,00,000")
+print(f"Final capital:    Rs {capital:,.2f}")
+print(f"Total return:     {total_return:+.2f}%")
+
+# Plot portfolio value over time
+plt.figure(figsize=(12, 5))
+plt.plot(test_dates, portfolio, color="#1D9E75", linewidth=2, label="Portfolio Value")
+plt.axhline(y=100000, color="#EF9F27", linewidth=1, linestyle="--", label="Starting Capital")
+plt.fill_between(test_dates, 100000, portfolio,
+                 where=[p >= 100000 for p in portfolio],
+                 color="#1D9E75", alpha=0.15)
+plt.fill_between(test_dates, 100000, portfolio,
+                 where=[p < 100000 for p in portfolio],
+                 color="#D85A30", alpha=0.15)
+plt.title(f"{ticker} Backtest — Starting Rs 1,00,000 | Return: {total_return:+.2f}%")
+plt.xlabel("Date")
+plt.ylabel("Portfolio Value (INR)")
+plt.legend()
+plt.tight_layout()
+backtest_filename = f"{ticker.replace('.', '_')}_backtest.png"
+plt.savefig(backtest_filename, dpi=150)
+plt.show()
+print(f"Backtest chart saved as {backtest_filename}")
